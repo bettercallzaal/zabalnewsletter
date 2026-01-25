@@ -3,6 +3,7 @@ from datetime import datetime
 from openai import OpenAI
 from src.memory_manager import MemoryManager
 from src.debug_logger import logger
+from src.constitution_checker import validate_output
 
 class NewsletterGenerator:
     def __init__(self):
@@ -31,7 +32,7 @@ class NewsletterGenerator:
         delta = today - start_date
         return delta.days + 1
     
-    def generate_newsletter(self, daily_input, badass_quote=None):
+    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None):
         day_num = self.calculate_day_number()
         today_str = datetime.now().strftime('%B %d, %Y')
         
@@ -43,8 +44,8 @@ class NewsletterGenerator:
             logger.log_section("PROMPT ASSEMBLY START")
             logger.log("BASE PROMPT LOADED", f"{len(base_prompt)} chars", "verbose")
         
-        # Use lens-aware enhancement
-        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input)
+        # Use lens-aware enhancement (with optional override)
+        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override)
         
         if logger.is_enabled("log_prompt_assembly"):
             logger.log("FINAL PROMPT LENGTH", f"{len(prompt_template)} chars", "verbose")
@@ -78,6 +79,15 @@ Daily Input:
             
             if logger.is_enabled("log_llm_responses"):
                 logger.log("LLM RESPONSE", newsletter, "trace")
+            
+            # Constitution check and auto-fix
+            newsletter, issues, was_fixed = validate_output(newsletter, "newsletter", auto_fix_enabled=True)
+            
+            if was_fixed:
+                logger.log("CONSTITUTION", "Auto-fixes applied", "basic")
+            
+            if issues:
+                logger.log("CONSTITUTION WARNING", f"{len(issues)} issues remain after auto-fix", "basic", force=True)
             
             # Save to file (skip in serverless environments like Vercel)
             filepath = None

@@ -8,7 +8,22 @@ class MemoryManager:
     def __init__(self):
         self.memory_path = os.path.join(os.path.dirname(__file__), "..", "memory", "personality.json")
         self.lens_selector = LensSelector()
+        self.budget_path = os.path.join(os.path.dirname(__file__), "..", "config", "prompt_budget.json")
+        self.load_budget()
         self.ensure_memory_file()
+    
+    def load_budget(self):
+        """Load prompt budget configuration"""
+        try:
+            with open(self.budget_path, 'r') as f:
+                self.budget = json.load(f)
+        except:
+            # Default budget if file doesn't exist
+            self.budget = {
+                "target_chars": 10000,
+                "hard_limit": 12000,
+                "prune_order": ["voice_examples", "style_notes", "context_memories"]
+            }
     
     def ensure_memory_file(self):
         """Create memory file if it doesn't exist"""
@@ -146,15 +161,71 @@ class MemoryManager:
                       f"{len(memory.get('style_notes', []))} style rules",
                       "basic")
         
+        # Check prompt budget
+        enhanced = self._check_budget(enhanced, memory)
+        
         return enhanced
     
-    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input):
+    def _check_budget(self, prompt, memory):
+        """Check and enforce prompt budget"""
+        prompt_length = len(prompt)
+        target = self.budget.get("target_chars", 10000)
+        hard_limit = self.budget.get("hard_limit", 12000)
+        
+        if prompt_length <= target:
+            return prompt
+        
+        if prompt_length > hard_limit:
+            logger.log_section("PROMPT BUDGET - HARD LIMIT EXCEEDED")
+            logger.log("TARGET", f"{target} chars", "basic", force=True)
+            logger.log("ACTUAL", f"{prompt_length} chars", "basic", force=True)
+            logger.log("ACTION", "Auto-pruning required", "basic", force=True)
+            
+            # Auto-prune
+            return self._auto_prune(prompt, memory, target)
+        
+        else:
+            # Warning only
+            logger.log("PROMPT BUDGET WARNING", 
+                      f"{prompt_length} chars (target: {target}, limit: {hard_limit})",
+                      "basic")
+            return prompt
+    
+    def _auto_prune(self, prompt, memory, target):
+        """Auto-prune memory to fit budget"""
+        prune_order = self.budget.get("prune_order", ["voice_examples"])
+        
+        for category in prune_order:
+            if category == "voice_examples" and len(memory.get("voice_examples", [])) > 3:
+                # Remove oldest example
+                removed = memory["voice_examples"].pop(0)
+                logger.log("PRUNED", f"Removed voice example: {removed.get('title', 'Unknown')}", "basic", force=True)
+                
+                # Save pruned memory
+                self.save_memory(memory)
+                
+                # Regenerate prompt
+                return self.get_enhanced_prompt(prompt.split("\n\n")[0])  # Rebuild from base
+            
+            elif category == "style_notes" and len(memory.get("style_notes", [])) > 5:
+                # Remove last style note
+                removed = memory["style_notes"].pop()
+                logger.log("PRUNED", f"Removed style note: {removed[:50]}...", "basic", force=True)
+                self.save_memory(memory)
+                return self.get_enhanced_prompt(prompt.split("\n\n")[0])
+        
+        # If still over budget, just warn
+        logger.log("PRUNE WARNING", "Could not prune enough - manual review needed", "basic", force=True)
+        return prompt
+    
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None):
         """
         Enhance prompt with personality memory AND selected mindful lens
         
         Args:
             base_prompt: Base newsletter prompt
             daily_input: The day's reflection (for lens selection)
+            lens_override: Manual lens selection (optional)
         
         Returns:
             Enhanced prompt with lens guidance
@@ -162,8 +233,8 @@ class MemoryManager:
         # Get base enhancement
         enhanced = self.get_enhanced_prompt(base_prompt)
         
-        # Select and add lens guidance
-        lens_name, lens_data, reason = self.lens_selector.select_lens(daily_input)
+        # Select and add lens guidance (with optional override)
+        lens_name, lens_data, reason = self.lens_selector.select_lens(daily_input, override=lens_override)
         
         if lens_data:
             lens_guidance = self.lens_selector.get_lens_guidance(lens_name)

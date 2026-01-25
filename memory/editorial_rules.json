@@ -1,0 +1,37 @@
+{
+  "non_negotiables": [
+    "quiet momentum over hype",
+    "permission over instruction",
+    "no marketing language",
+    "short paragraphs",
+    "one lens only"
+  ],
+  "hard_bans": [
+    "let's dive in",
+    "game-changer",
+    "hustle",
+    "synergy",
+    "crushing it",
+    "level up",
+    "grind",
+    "kill it",
+    "smash it",
+    "take it to the next level",
+    "circle back",
+    "touch base",
+    "low-hanging fruit",
+    "move the needle"
+  ],
+  "output_constraints": {
+    "newsletter": {
+      "require_signature": true,
+      "max_paragraph_sentences": 4,
+      "closing_line_max_sentences": 1
+    },
+    "social": {
+      "require_ZM_prefix": true,
+      "no_emojis": true,
+      "no_hashtags": true
+    }
+  }
+}

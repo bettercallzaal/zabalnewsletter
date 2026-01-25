@@ -29,13 +29,14 @@ def generate_newsletter():
         data = request.json
         daily_input = data.get('daily_input', '')
         badass_quote = data.get('badass_quote', '')
+        lens_override = data.get('lens_override', None)
         
         if not daily_input:
             return jsonify({'error': 'Daily input is required'}), 400
         
-        # Generate newsletter
+        # Generate newsletter (with optional lens override)
         gen = NewsletterGenerator()
-        result = gen.generate_newsletter(daily_input, badass_quote)
+        result = gen.generate_newsletter(daily_input, badass_quote, lens_override)
         
         return jsonify({
             'success': True,

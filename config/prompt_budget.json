@@ -1,0 +1,14 @@
+{
+  "target_chars": 10000,
+  "hard_limit": 12000,
+  "prune_order": [
+    "voice_examples",
+    "style_notes",
+    "context_memories"
+  ],
+  "never_prune": [
+    "voice_donts",
+    "current_state",
+    "lens_guidance"
+  ]
+}

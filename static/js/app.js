@@ -19,11 +19,17 @@ function showTab(tabName) {
 }
 
 // Newsletter form submission
-document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
+document.getElementById('newsletter-form').addEventListener('submit', async function generateNewsletter(e) {
     e.preventDefault();
     
     const dailyInput = document.getElementById('daily-input').value;
     const badassQuote = document.getElementById('badass-quote').value;
+    const lensOverride = document.getElementById('lens-override').value;
+    
+    if (!dailyInput) {
+        showError('Please enter your daily input');
+        return;
+    }
     
     showLoading(true);
     
@@ -35,7 +41,8 @@ document.getElementById('newsletter-form').addEventListener('submit', async (e) 
             },
             body: JSON.stringify({
                 daily_input: dailyInput,
-                badass_quote: badassQuote
+                badass_quote: badassQuote,
+                lens_override: lensOverride !== 'auto' ? lensOverride : null
             })
         });
         

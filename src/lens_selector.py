@@ -25,16 +25,24 @@ class LensSelector:
         except:
             return {}
     
-    def select_lens(self, daily_input):
+    def select_lens(self, daily_input, override=None):
         """
         Select appropriate lens based on day's content
         
         Args:
             daily_input: The day's reflection text
+            override: Manual lens selection (overrides auto-selection)
         
         Returns:
             tuple: (lens_name, lens_data, reason)
         """
+        # Manual override
+        if override and override != "auto" and override in self.lenses:
+            logger.log_section("MINDFUL LENS SELECTION")
+            logger.log("MODE", "manual override", "basic")
+            logger.log("SELECTED LENS", override, "basic")
+            return override, self.lenses[override], "Manual override"
+        
         if not daily_input:
             return "personal_observation", self.lenses.get("personal_observation", {}), "No input provided"
         

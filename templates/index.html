@@ -31,10 +31,25 @@
                         <textarea 
                             id="daily-input" 
                             name="daily_input" 
-                            rows="6" 
-                            placeholder="gm zm feeling very blessed today to take a step back stream with adam and get back to zabal basics"
+                            rows="8" 
+                            placeholder="Describe your day... what moved, what landed, what resisted."
                             required
                         ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lens-override">Reflective Lens (Optional Override)</label>
+                        <select id="lens-override" name="lens_override">
+                            <option value="auto">Auto (recommended)</option>
+                            <option value="dont_sweat_the_small_stuff">Don't Sweat - calm, perspective-shifting</option>
+                            <option value="you_are_a_badass">Badass - permission-giving, self-trust</option>
+                            <option value="stoic_light">Stoic - grounded, steady</option>
+                            <option value="zen_practical">Zen - spacious, observant</option>
+                            <option value="personal_observation">Personal - intimate, lived-in</option>
+                        </select>
+                        <p class="info-text" style="margin-top: 8px; font-size: 0.85rem; color: #666;">
+                            Leave on "Auto" to let the system choose based on your input. Override when intuition beats automation.
+                        </p>
                     </div>
                     
                     <div class="form-group">
