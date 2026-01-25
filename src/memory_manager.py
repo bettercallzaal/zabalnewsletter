@@ -2,10 +2,12 @@ import os
 import json
 from datetime import datetime
 from src.debug_logger import logger
+from src.lens_selector import LensSelector
 
 class MemoryManager:
     def __init__(self):
         self.memory_path = os.path.join(os.path.dirname(__file__), "..", "memory", "personality.json")
+        self.lens_selector = LensSelector()
         self.ensure_memory_file()
     
     def ensure_memory_file(self):
@@ -143,5 +145,31 @@ class MemoryManager:
                       f"{len(memory.get('voice_donts', []))} donts, "
                       f"{len(memory.get('style_notes', []))} style rules",
                       "basic")
+        
+        return enhanced
+    
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input):
+        """
+        Enhance prompt with personality memory AND selected mindful lens
+        
+        Args:
+            base_prompt: Base newsletter prompt
+            daily_input: The day's reflection (for lens selection)
+        
+        Returns:
+            Enhanced prompt with lens guidance
+        """
+        # Get base enhancement
+        enhanced = self.get_enhanced_prompt(base_prompt)
+        
+        # Select and add lens guidance
+        lens_name, lens_data, reason = self.lens_selector.select_lens(daily_input)
+        
+        if lens_data:
+            lens_guidance = self.lens_selector.get_lens_guidance(lens_name)
+            enhanced += f"\n\n=== MINDFUL LENS FOR TODAY ===\n{lens_guidance}\n\n"
+            
+            if logger.is_enabled("log_prompt_assembly"):
+                logger.log("LENS ADDED", f"{lens_name} - {reason}", "basic")
         
         return enhanced

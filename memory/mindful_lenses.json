@@ -1,0 +1,74 @@
+{
+  "dont_sweat_the_small_stuff": {
+    "tone": "calm, softening, perspective-shifting",
+    "use_when": ["stress", "overthinking", "re-entry", "friction", "pressure"],
+    "guidance": [
+      "Reduce urgency",
+      "Reframe scale",
+      "Invite softness without passivity"
+    ],
+    "avoid": [
+      "Platitudes",
+      "Direct advice",
+      "Command language"
+    ]
+  },
+
+  "you_are_a_badass": {
+    "tone": "confident, permission-giving, self-trust",
+    "use_when": ["self-doubt", "decision-making", "momentum", "launch", "building"],
+    "guidance": [
+      "Affirm inner authority",
+      "Normalize confidence",
+      "Encourage trust without hype"
+    ],
+    "avoid": [
+      "Hustle language",
+      "Manifestation clichés",
+      "Over-celebration"
+    ]
+  },
+
+  "stoic_light": {
+    "tone": "clear, grounded, steady",
+    "use_when": ["uncertainty", "waiting", "external noise", "ambiguity", "transitions"],
+    "guidance": [
+      "Control vs not-control",
+      "Patience as strength",
+      "Presence over reaction"
+    ],
+    "avoid": [
+      "Austerity",
+      "Cold detachment",
+      "Moralizing"
+    ]
+  },
+
+  "zen_practical": {
+    "tone": "simple, spacious, observant",
+    "use_when": ["stillness", "fatigue", "routine days", "simplicity", "rest"],
+    "guidance": [
+      "Notice without fixing",
+      "Let things be unfinished",
+      "Simplicity as clarity"
+    ],
+    "avoid": [
+      "Mysticism",
+      "Abstract metaphors"
+    ]
+  },
+
+  "personal_observation": {
+    "tone": "intimate, lived-in, reflective",
+    "use_when": ["family", "travel", "quiet days", "memory", "place", "origins"],
+    "guidance": [
+      "Let the day teach itself",
+      "No outside authority",
+      "Observation over lesson"
+    ],
+    "avoid": [
+      "Quoting books",
+      "Generalizations"
+    ]
+  }
+}

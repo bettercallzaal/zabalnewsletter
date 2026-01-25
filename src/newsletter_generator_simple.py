@@ -20,24 +20,10 @@ class NewsletterGenerator:
         self.memory_manager = MemoryManager()
         
     def load_prompt(self):
-        """Load base prompt and enhance with personality memory"""
-        if logger.is_enabled("log_prompt_assembly"):
-            logger.log_section("PROMPT ASSEMBLY START")
-        
+        """Load base prompt and enhance with personality memory (legacy method)"""
         with open(self.prompt_path, 'r') as f:
             base_prompt = f.read()
-        
-        logger.log("BASE PROMPT LOADED", f"{len(base_prompt)} chars", "verbose")
-        
-        # Enhance with personality/memory
-        enhanced_prompt = self.memory_manager.get_enhanced_prompt(base_prompt)
-        
-        if logger.is_enabled("log_prompt_assembly"):
-            logger.log("FINAL PROMPT LENGTH", f"{len(enhanced_prompt)} chars", "verbose")
-            logger.log("ENHANCEMENT ADDED", f"{len(enhanced_prompt) - len(base_prompt)} chars", "verbose")
-            logger.log("FINAL PROMPT SENT TO LLM", enhanced_prompt, "trace")
-        
-        return enhanced_prompt
+        return self.memory_manager.get_enhanced_prompt(base_prompt)
     
     def calculate_day_number(self):
         start_date = datetime(2025, 1, 1)
@@ -49,7 +35,20 @@ class NewsletterGenerator:
         day_num = self.calculate_day_number()
         today_str = datetime.now().strftime('%B %d, %Y')
         
-        prompt_template = self.load_prompt()
+        # Load prompt with lens selection based on daily input
+        with open(self.prompt_path, 'r') as f:
+            base_prompt = f.read()
+        
+        if logger.is_enabled("log_prompt_assembly"):
+            logger.log_section("PROMPT ASSEMBLY START")
+            logger.log("BASE PROMPT LOADED", f"{len(base_prompt)} chars", "verbose")
+        
+        # Use lens-aware enhancement
+        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input)
+        
+        if logger.is_enabled("log_prompt_assembly"):
+            logger.log("FINAL PROMPT LENGTH", f"{len(prompt_template)} chars", "verbose")
+            logger.log("FINAL PROMPT SENT TO LLM", prompt_template, "trace")
         
         user_message = f"""Day {day_num} - {today_str}
 
