@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZABAL Content Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Year of the ZABAL</h1>
+            <p class="subtitle">Content Generator</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('newsletter')">Newsletter</button>
+            <button class="tab-btn" onclick="showTab('social')">Social Content</button>
+            <button class="tab-btn" onclick="showTab('history')">History</button>
+        </div>
+
+        <!-- Newsletter Tab -->
+        <div id="newsletter-tab" class="tab-content active">
+            <div class="form-section">
+                <h2>Generate Newsletter</h2>
+                <form id="newsletter-form">
+                    <div class="form-group">
+                        <label for="daily-input">Daily Input</label>
+                        <textarea 
+                            id="daily-input" 
+                            name="daily_input" 
+                            rows="6" 
+                            placeholder="gm zm feeling very blessed today to take a step back stream with adam and get back to zabal basics"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="badass-quote">You Are a Badass Quote (Optional)</label>
+                        <textarea 
+                            id="badass-quote" 
+                            name="badass_quote" 
+                            rows="3" 
+                            placeholder="Enter a quote or reflection from You Are a Badass..."
+                        ></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Generate Newsletter</button>
+                </form>
+            </div>
+
+            <div id="newsletter-output" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h3>Generated Newsletter</h3>
+                    <div class="output-actions">
+                        <button onclick="copyToClipboard('newsletter-content')" class="btn-secondary">Copy</button>
+                        <button onclick="generateSocialFromNewsletter()" class="btn-secondary">Generate Social →</button>
+                    </div>
+                </div>
+                <div class="day-info" id="day-info"></div>
+                <pre id="newsletter-content" class="content-box"></pre>
+                <p class="file-saved" id="newsletter-saved"></p>
+            </div>
+        </div>
+
+        <!-- Social Content Tab -->
+        <div id="social-tab" class="tab-content">
+            <div class="form-section">
+                <h2>Generate Social Content</h2>
+                <form id="social-form">
+                    <div class="form-group">
+                        <label for="newsletter-content">Newsletter Content</label>
+                        <textarea 
+                            id="newsletter-content-input" 
+                            name="newsletter_content" 
+                            rows="10" 
+                            placeholder="Paste your newsletter content here..."
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newsletter-link">Newsletter Link (Optional)</label>
+                        <input 
+                            type="url" 
+                            id="newsletter-link" 
+                            name="newsletter_link" 
+                            placeholder="https://paragraph.com/@zabal/day-24"
+                        >
+                    </div>
+                    
+                    <div class="form-group checkbox">
+                        <label>
+                            <input type="checkbox" id="has-video" name="has_video">
+                            Include video content (TikTok/YouTube)
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Generate Social Content</button>
+                </form>
+            </div>
+
+            <div id="social-output" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h3>Generated Social Content</h3>
+                    <button onclick="copyToClipboard('social-content')" class="btn-secondary">Copy All</button>
+                </div>
+                <pre id="social-content" class="content-box"></pre>
+                <p class="file-saved" id="social-saved"></p>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history-tab" class="tab-content">
+            <h2>Newsletter History</h2>
+            <div id="history-list" class="history-list">
+                <p class="loading">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Generating content...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
