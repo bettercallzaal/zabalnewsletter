@@ -291,3 +291,33 @@ header h1 {
     border-radius: 8px;
     margin-top: 16px;
 }
+
+.subtitle-text {
+    color: #666;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+.info-text {
+    color: #667eea;
+    font-size: 0.9rem;
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}

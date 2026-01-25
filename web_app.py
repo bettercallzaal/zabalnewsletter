@@ -126,5 +126,122 @@ def get_newsletter(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/prompts/get/<prompt_type>')
+def get_prompt(prompt_type):
+    """Get current prompt content"""
+    try:
+        if prompt_type not in ['newsletter', 'social']:
+            return jsonify({'error': 'Invalid prompt type'}), 400
+        
+        prompt_path = os.path.join(os.path.dirname(__file__), "prompts", f"{prompt_type}_prompt.txt")
+        
+        if not os.path.exists(prompt_path):
+            return jsonify({'error': 'Prompt file not found'}), 404
+        
+        with open(prompt_path, 'r') as f:
+            content = f.read()
+        
+        return jsonify({
+            'success': True,
+            'content': content,
+            'type': prompt_type
+        })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/prompts/improve', methods=['POST'])
+def improve_prompt():
+    """Use LLM to improve prompt based on feedback"""
+    try:
+        data = request.json
+        prompt_type = data.get('prompt_type', '')
+        current_prompt = data.get('current_prompt', '')
+        feedback = data.get('feedback', '')
+        
+        if not all([prompt_type, current_prompt, feedback]):
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        # Use the same LLM to improve the prompt
+        gen = NewsletterGenerator()
+        
+        improvement_request = f"""You are a prompt engineering expert. Your task is to improve the following prompt based on user feedback.
+
+CURRENT PROMPT:
+{current_prompt}
+
+USER FEEDBACK:
+{feedback}
+
+Please provide an improved version of the prompt that incorporates the user's feedback while maintaining the original structure and intent. Return ONLY the improved prompt text, no explanations."""
+
+        if gen.provider == "claude":
+            response = gen.client.messages.create(
+                model=gen.model,
+                max_tokens=4096,
+                messages=[
+                    {"role": "user", "content": improvement_request}
+                ],
+                temperature=0.7,
+            )
+            improved_prompt = response.content[0].text
+        else:
+            response = gen.client.chat.completions.create(
+                model=gen.model,
+                messages=[
+                    {"role": "user", "content": improvement_request}
+                ],
+                temperature=0.7,
+            )
+            improved_prompt = response.choices[0].message.content
+        
+        return jsonify({
+            'success': True,
+            'improved_prompt': improved_prompt
+        })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/prompts/save', methods=['POST'])
+def save_prompt():
+    """Save updated prompt to file"""
+    try:
+        data = request.json
+        prompt_type = data.get('prompt_type', '')
+        content = data.get('content', '')
+        
+        if not all([prompt_type, content]):
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        if prompt_type not in ['newsletter', 'social']:
+            return jsonify({'error': 'Invalid prompt type'}), 400
+        
+        # Backup current prompt
+        prompt_path = os.path.join(os.path.dirname(__file__), "prompts", f"{prompt_type}_prompt.txt")
+        backup_dir = os.path.join(os.path.dirname(__file__), "prompts", "backups")
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        if os.path.exists(prompt_path):
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_path = os.path.join(backup_dir, f"{prompt_type}_prompt_{timestamp}.txt")
+            with open(prompt_path, 'r') as f:
+                backup_content = f.read()
+            with open(backup_path, 'w') as f:
+                f.write(backup_content)
+        
+        # Save new prompt
+        with open(prompt_path, 'w') as f:
+            f.write(content)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Prompt saved successfully',
+            'backup_created': True
+        })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -17,6 +17,7 @@
             <button class="tab-btn active" onclick="showTab('newsletter')">Newsletter</button>
             <button class="tab-btn" onclick="showTab('social')">Social Content</button>
             <button class="tab-btn" onclick="showTab('history')">History</button>
+            <button class="tab-btn" onclick="showTab('prompts')">Improve Prompts</button>
         </div>
 
         <!-- Newsletter Tab -->
@@ -115,6 +116,60 @@
             <h2>Newsletter History</h2>
             <div id="history-list" class="history-list">
                 <p class="loading">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Prompt Improvement Tab -->
+        <div id="prompts-tab" class="tab-content">
+            <h2>Improve Your Prompts</h2>
+            <p class="subtitle-text">Use AI to refine your newsletter and social prompts based on your feedback</p>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="prompt-type-select">Select Prompt to Improve</label>
+                    <select id="prompt-type-select" onchange="loadPrompt()">
+                        <option value="newsletter">Newsletter Prompt</option>
+                        <option value="social">Social Content Prompt</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="current-prompt-display">Current Prompt</label>
+                    <textarea 
+                        id="current-prompt-display" 
+                        rows="15" 
+                        readonly
+                        style="background: #f9f9f9; cursor: not-allowed;"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt-feedback">How should this prompt be improved?</label>
+                    <textarea 
+                        id="prompt-feedback" 
+                        rows="5" 
+                        placeholder="Example: Make the tone more casual and conversational. Add more emphasis on mindfulness. Include more specific formatting rules for dates."
+                    ></textarea>
+                </div>
+
+                <button onclick="improvePrompt()" class="btn-primary">✨ Improve Prompt with AI</button>
+            </div>
+
+            <div id="improved-prompt-section" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h3>Improved Prompt</h3>
+                    <div class="output-actions">
+                        <button onclick="copyToClipboard('improved-prompt-content')" class="btn-secondary">Copy</button>
+                        <button onclick="saveImprovedPrompt()" class="btn-primary">💾 Save & Use This Prompt</button>
+                    </div>
+                </div>
+                <textarea 
+                    id="improved-prompt-content" 
+                    class="content-box" 
+                    rows="20"
+                    style="font-family: inherit; resize: vertical;"
+                ></textarea>
+                <p class="info-text">💡 The original prompt will be backed up before saving</p>
             </div>
         </div>
 

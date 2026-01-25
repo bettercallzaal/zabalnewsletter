@@ -211,3 +211,123 @@ function showError(message) {
         errorDiv.remove();
     }, 5000);
 }
+
+// Load prompt content
+async function loadPrompt() {
+    const promptType = document.getElementById('prompt-type-select').value;
+    
+    try {
+        const response = await fetch(`/prompts/get/${promptType}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('current-prompt-display').value = data.content;
+        } else {
+            showError(data.error);
+        }
+    } catch (error) {
+        showError('Failed to load prompt: ' + error.message);
+    }
+}
+
+// Improve prompt with AI
+async function improvePrompt() {
+    const promptType = document.getElementById('prompt-type-select').value;
+    const currentPrompt = document.getElementById('current-prompt-display').value;
+    const feedback = document.getElementById('prompt-feedback').value;
+    
+    if (!feedback.trim()) {
+        showError('Please provide feedback on how to improve the prompt');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        const response = await fetch('/prompts/improve', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt_type: promptType,
+                current_prompt: currentPrompt,
+                feedback: feedback
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('improved-prompt-section').style.display = 'block';
+            document.getElementById('improved-prompt-content').value = data.improved_prompt;
+            
+            // Store for saving
+            window.improvedPromptType = promptType;
+            
+            // Scroll to output
+            document.getElementById('improved-prompt-section').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            showError(data.error);
+        }
+    } catch (error) {
+        showError('Failed to improve prompt: ' + error.message);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Save improved prompt
+async function saveImprovedPrompt() {
+    const promptType = window.improvedPromptType;
+    const content = document.getElementById('improved-prompt-content').value;
+    
+    if (!confirm('This will replace your current prompt. The old version will be backed up. Continue?')) {
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        const response = await fetch('/prompts/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt_type: promptType,
+                content: content
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('✓ Prompt saved successfully! Backup created in prompts/backups/');
+            
+            // Reload the current prompt display
+            loadPrompt();
+            
+            // Clear feedback
+            document.getElementById('prompt-feedback').value = '';
+            
+            // Hide improved section
+            document.getElementById('improved-prompt-section').style.display = 'none';
+        } else {
+            showError(data.error);
+        }
+    } catch (error) {
+        showError('Failed to save prompt: ' + error.message);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Load prompt when prompts tab is opened
+const originalShowTab = showTab;
+showTab = function(tabName) {
+    originalShowTab.call(this, tabName);
+    if (tabName === 'prompts') {
+        loadPrompt();
+    }
+};
