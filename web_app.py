@@ -7,9 +7,10 @@ Simple Flask app for generating newsletters and social content
 import os
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
-from dotenv import load_dotenv
-from src.newsletter_generator import NewsletterGenerator
-from src.social_generator import SocialGenerator
+import os
+from datetime import datetime
+from src.newsletter_generator_simple import NewsletterGenerator
+from src.social_generator_simple import SocialGenerator
 
 load_dotenv()
 
