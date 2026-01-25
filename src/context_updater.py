@@ -8,6 +8,7 @@ import os
 import json
 from datetime import datetime
 from openai import OpenAI
+from src.debug_logger import logger
 
 class ZABALContextUpdater:
     def __init__(self):
@@ -54,6 +55,12 @@ class ZABALContextUpdater:
             sources: List of URLs or text samples
             feedback: Optional feedback from Zaal about what felt off
         """
+        
+        if logger.is_enabled("log_context_diff"):
+            logger.log_section("CONTEXT ANALYSIS START")
+            logger.log("SOURCES PROVIDED", len(sources), "basic")
+            for i, source in enumerate(sources, 1):
+                logger.log(f"  Source {i}", source[:100], "verbose")
         
         current_memory = self.load_current_memory()
         
@@ -112,14 +119,31 @@ Be ruthless about quality. Only suggest additions that are unmistakably Zaal's v
             
             # Parse JSON response
             analysis = json.loads(response.choices[0].message.content)
+            
+            if logger.is_enabled("log_context_diff"):
+                logger.log_section("ANALYSIS RESULTS")
+                logger.log("VOICE PATTERNS FOUND", 
+                          len(analysis.get("voice_patterns_found", [])), 
+                          "verbose")
+                logger.log("NEW EXAMPLES SUGGESTED", 
+                          len(analysis.get("new_voice_examples", [])), 
+                          "verbose")
+                logger.log("NEW DONTS SUGGESTED", 
+                          len(analysis.get("new_voice_donts", [])), 
+                          "verbose")
+                logger.log("REASONING", analysis.get("reasoning", ""), "verbose")
+            
             return analysis
             
         except Exception as e:
-            print(f"Analysis failed: {e}")
+            logger.log("ANALYSIS FAILED", str(e), "basic", force=True)
             return None
     
     def apply_updates(self, analysis, current_memory):
         """Apply analyzed updates to memory with safety checks"""
+        
+        if logger.is_enabled("log_context_diff"):
+            logger.log_section("APPLYING UPDATES")
         
         updated = current_memory.copy()
         changes = []
@@ -170,6 +194,9 @@ Be ruthless about quality. Only suggest additions that are unmistakably Zaal's v
         if analysis.get("current_state"):
             updated["current_state"] = analysis["current_state"]
             changes.append("Updated current state")
+        
+        if logger.is_enabled("log_context_diff"):
+            logger.log_diff("PERSONALITY JSON", current_memory, updated, "verbose")
         
         return updated, changes
     

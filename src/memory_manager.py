@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+from src.debug_logger import logger
 
 class MemoryManager:
     def __init__(self):
@@ -77,34 +78,70 @@ class MemoryManager:
     
     def get_enhanced_prompt(self, base_prompt):
         """Enhance prompt with personality memory"""
+        if logger.is_enabled("log_memory_injection"):
+            logger.log_section("MEMORY INJECTION START")
+        
         memory = self.load_memory()
         
         enhanced = base_prompt + "\n\n"
         
         # Add voice examples
         if memory["voice_examples"]:
+            logger.log("VOICE EXAMPLES ADDED", 
+                      f"{len(memory['voice_examples'])} examples", 
+                      "verbose")
+            for example in memory["voice_examples"]:
+                logger.log(f"  - {example['title']}", 
+                          f"{len(example['content'])} chars", 
+                          "trace")
+            
             enhanced += "=== VOICE EXAMPLES (Your Actual Writing) ===\n\n"
             for example in memory["voice_examples"]:
                 enhanced += f"{example['title']}:\n{example['content']}\n\n"
         
         # Add voice don'ts
         if memory["voice_donts"]:
+            logger.log("VOICE DONTS ADDED", 
+                      f"{len(memory['voice_donts'])} phrases", 
+                      "verbose")
+            logger.log("  Phrases", memory["voice_donts"], "trace")
+            
             enhanced += "=== NEVER USE THESE PHRASES ===\n"
             enhanced += "- " + "\n- ".join(memory["voice_donts"]) + "\n\n"
         
         # Add style notes
         if memory["style_notes"]:
+            logger.log("STYLE NOTES ADDED", 
+                      f"{len(memory['style_notes'])} notes", 
+                      "verbose")
+            logger.log("  Notes", memory["style_notes"], "trace")
+            
             enhanced += "=== ADDITIONAL STYLE NOTES ===\n"
             enhanced += "- " + "\n- ".join(memory["style_notes"]) + "\n\n"
         
         # Add context
         if memory["context_memories"]:
+            logger.log("CONTEXT MEMORIES ADDED", 
+                      f"{len(memory['context_memories'])} items", 
+                      "verbose")
+            
             enhanced += "=== CONTEXT & BACKGROUND ===\n"
             enhanced += "- " + "\n- ".join(memory["context_memories"]) + "\n\n"
         
         # Add current projects
         if memory["current_projects"]:
+            logger.log("CURRENT PROJECTS ADDED", 
+                      f"{len(memory['current_projects'])} projects", 
+                      "verbose")
+            
             enhanced += "=== CURRENT PROJECTS ===\n"
             enhanced += "- " + "\n- ".join(memory["current_projects"]) + "\n\n"
+        
+        if logger.is_enabled("log_memory_injection"):
+            logger.log("MEMORY SUMMARY", 
+                      f"{len(memory.get('voice_examples', []))} examples, "
+                      f"{len(memory.get('voice_donts', []))} donts, "
+                      f"{len(memory.get('style_notes', []))} style rules",
+                      "basic")
         
         return enhanced

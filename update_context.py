@@ -5,9 +5,48 @@ Run this to update personality.json from recent writing
 """
 
 import sys
+import json
+import os
 from src.context_updater import ZABALContextUpdater
+from src.debug_logger import logger
 
 def main():
+    # Parse CLI flags
+    args = sys.argv[1:]
+    
+    # Handle debug flags
+    if '--debug' in args:
+        # Override config to enable debug
+        config_path = os.path.join(os.path.dirname(__file__), "config", "debug.json")
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        config['enabled'] = True
+        config['level'] = 'verbose'
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=2)
+        print("🔍 Debug mode enabled (verbose)")
+    
+    if '--debug-level' in args:
+        level_idx = args.index('--debug-level') + 1
+        if level_idx < len(args):
+            level = args[level_idx]
+            config_path = os.path.join(os.path.dirname(__file__), "config", "debug.json")
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            config['enabled'] = True
+            config['level'] = level
+            with open(config_path, 'w') as f:
+                json.dump(config, f, indent=2)
+            print(f"🔍 Debug mode enabled ({level})")
+    
+    if '--quiet' in args:
+        config_path = os.path.join(os.path.dirname(__file__), "config", "debug.json")
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        config['enabled'] = False
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=2)
+        print("🔇 Quiet mode enabled")
     updater = ZABALContextUpdater()
     
     print("=" * 60)

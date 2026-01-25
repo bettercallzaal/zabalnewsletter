@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from openai import OpenAI
 from src.memory_manager import MemoryManager
+from src.debug_logger import logger
 
 class NewsletterGenerator:
     def __init__(self):
@@ -20,10 +21,23 @@ class NewsletterGenerator:
         
     def load_prompt(self):
         """Load base prompt and enhance with personality memory"""
+        if logger.is_enabled("log_prompt_assembly"):
+            logger.log_section("PROMPT ASSEMBLY START")
+        
         with open(self.prompt_path, 'r') as f:
             base_prompt = f.read()
+        
+        logger.log("BASE PROMPT LOADED", f"{len(base_prompt)} chars", "verbose")
+        
         # Enhance with personality/memory
-        return self.memory_manager.get_enhanced_prompt(base_prompt)
+        enhanced_prompt = self.memory_manager.get_enhanced_prompt(base_prompt)
+        
+        if logger.is_enabled("log_prompt_assembly"):
+            logger.log("FINAL PROMPT LENGTH", f"{len(enhanced_prompt)} chars", "verbose")
+            logger.log("ENHANCEMENT ADDED", f"{len(enhanced_prompt) - len(base_prompt)} chars", "verbose")
+            logger.log("FINAL PROMPT SENT TO LLM", enhanced_prompt, "trace")
+        
+        return enhanced_prompt
     
     def calculate_day_number(self):
         start_date = datetime(2025, 1, 1)
@@ -46,6 +60,11 @@ Daily Input:
             user_message += f"\n\nYou Are a Badass Quote:\n{badass_quote}"
         
         try:
+            if logger.is_enabled("log_llm_requests"):
+                logger.log_section("LLM REQUEST")
+                logger.log("MODEL", self.model, "basic")
+                logger.log("USER MESSAGE", user_message, "verbose")
+            
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -57,6 +76,9 @@ Daily Input:
             )
             
             newsletter = response.choices[0].message.content
+            
+            if logger.is_enabled("log_llm_responses"):
+                logger.log("LLM RESPONSE", newsletter, "trace")
             
             # Save to file (skip in serverless environments like Vercel)
             filepath = None

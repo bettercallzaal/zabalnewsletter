@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "level": "verbose",
+
+  "log_prompt_assembly": true,
+  "log_memory_injection": true,
+  "log_context_diff": true,
+  "log_llm_requests": true,
+  "log_llm_responses": false,
+
+  "truncate_long_text": true,
+  "max_chars": 800,
+
+  "color_output": true,
+  "timestamps": true
+}
