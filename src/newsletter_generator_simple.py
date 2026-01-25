@@ -53,21 +53,26 @@ Daily Input:
             
             newsletter = response.choices[0].message.content
             
-            # Save to file
-            output_dir = os.path.join(os.path.dirname(__file__), "..", "output", "newsletters")
-            os.makedirs(output_dir, exist_ok=True)
-            
-            filename = f"newsletter_day_{day_num}_{datetime.now().strftime('%Y%m%d')}.txt"
-            filepath = os.path.join(output_dir, filename)
-            
-            with open(filepath, 'w') as f:
-                f.write(newsletter)
+            # Save to file (skip in serverless environments like Vercel)
+            filepath = None
+            try:
+                output_dir = os.path.join(os.path.dirname(__file__), "..", "output", "newsletters")
+                os.makedirs(output_dir, exist_ok=True)
+                
+                filename = f"newsletter_day_{day_num}_{datetime.now().strftime('%Y%m%d')}.txt"
+                filepath = os.path.join(output_dir, filename)
+                
+                with open(filepath, 'w') as f:
+                    f.write(newsletter)
+            except (OSError, PermissionError):
+                # Read-only filesystem (Vercel) - skip file saving
+                filepath = "Not saved (serverless environment)"
             
             return {
                 'newsletter': newsletter,
                 'day_num': day_num,
                 'date': today_str,
-                'filepath': filepath
+                'filepath': filepath or "Not saved"
             }
             
         except Exception as e:

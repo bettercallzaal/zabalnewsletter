@@ -43,19 +43,24 @@ class SocialGenerator:
             
             social_content = response.choices[0].message.content
             
-            # Save to file
-            output_dir = os.path.join(os.path.dirname(__file__), "..", "output", "social")
-            os.makedirs(output_dir, exist_ok=True)
-            
-            filename = f"social_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-            filepath = os.path.join(output_dir, filename)
-            
-            with open(filepath, 'w') as f:
-                f.write(social_content)
+            # Save to file (skip in serverless environments like Vercel)
+            filepath = None
+            try:
+                output_dir = os.path.join(os.path.dirname(__file__), "..", "output", "social")
+                os.makedirs(output_dir, exist_ok=True)
+                
+                filename = f"social_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+                filepath = os.path.join(output_dir, filename)
+                
+                with open(filepath, 'w') as f:
+                    f.write(social_content)
+            except (OSError, PermissionError):
+                # Read-only filesystem (Vercel) - skip file saving
+                filepath = "Not saved (serverless environment)"
             
             return {
                 'social_content': social_content,
-                'filepath': filepath
+                'filepath': filepath or "Not saved"
             }
             
         except Exception as e:
