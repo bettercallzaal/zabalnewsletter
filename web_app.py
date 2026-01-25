@@ -33,19 +33,14 @@ def generate_newsletter():
         
         # Generate newsletter
         gen = NewsletterGenerator()
-        newsletter = gen.generate(daily_input, badass_quote)
-        filepath = gen.save_newsletter(newsletter)
-        
-        # Get day info
-        day_num = gen.get_day_of_year()
-        today = datetime.now()
+        result = gen.generate_newsletter(daily_input, badass_quote)
         
         return jsonify({
             'success': True,
-            'newsletter': newsletter,
-            'filepath': filepath,
-            'day_num': day_num,
-            'date': today.strftime('%A, %B %d, %Y')
+            'newsletter': result['newsletter'],
+            'filepath': result['filepath'],
+            'day_num': result['day_num'],
+            'date': result['date']
         })
     
     except Exception as e:
@@ -65,13 +60,12 @@ def generate_social():
         
         # Generate social content
         gen = SocialGenerator()
-        social_content = gen.generate(newsletter_content, newsletter_link, has_video)
-        filepath = gen.save_social_content(social_content)
+        result = gen.generate_social_content(newsletter_content, newsletter_link, has_video)
         
         return jsonify({
             'success': True,
-            'social_content': social_content,
-            'filepath': filepath
+            'social_content': result['social_content'],
+            'filepath': result['filepath']
         })
     
     except Exception as e:
