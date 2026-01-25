@@ -18,6 +18,7 @@
             <button class="tab-btn" onclick="showTab('social')">Social Content</button>
             <button class="tab-btn" onclick="showTab('history')">History</button>
             <button class="tab-btn" onclick="showTab('prompts')">Improve Prompts</button>
+            <button class="tab-btn" onclick="showTab('memory')">Memory & Voice</button>
         </div>
 
         <!-- Newsletter Tab -->
@@ -176,6 +177,62 @@
             </div>
         </div>
 
+        <!-- Memory & Voice Tab -->
+        <div id="memory-tab" class="tab-content">
+            <h2>Memory & Voice</h2>
+            <p class="subtitle-text">Build your AI personality with examples, style notes, and context that persist across all generations</p>
+            
+            <div class="form-section">
+                <!-- Voice Examples -->
+                <h3>Voice Examples (Your Actual Writing)</h3>
+                <div id="voice-examples-list"></div>
+                <button onclick="showAddVoiceExample()" class="btn-secondary">+ Add Voice Example</button>
+                
+                <div id="add-voice-example-form" style="display: none; margin-top: 16px;">
+                    <div class="form-group">
+                        <label>Example Title</label>
+                        <input type="text" id="voice-example-title" placeholder="e.g., Day 13 - Goa Travel">
+                    </div>
+                    <div class="form-group">
+                        <label>Example Content</label>
+                        <textarea id="voice-example-content" rows="4" placeholder="Paste your actual writing here..."></textarea>
+                    </div>
+                    <button onclick="addVoiceExample()" class="btn-primary">Save Example</button>
+                    <button onclick="cancelAddVoiceExample()" class="btn-secondary">Cancel</button>
+                </div>
+
+                <hr style="margin: 32px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+                <!-- Voice Don'ts -->
+                <h3>Voice Don'ts (Phrases to Avoid)</h3>
+                <div id="voice-donts-list"></div>
+                <div class="form-group">
+                    <input type="text" id="voice-dont-input" placeholder="Add phrase to avoid (e.g., 'Let's dive in')">
+                    <button onclick="addVoiceDont()" class="btn-secondary" style="margin-top: 8px;">+ Add Don't</button>
+                </div>
+
+                <hr style="margin: 32px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+                <!-- Style Notes -->
+                <h3>Style Notes</h3>
+                <div id="style-notes-list"></div>
+                <div class="form-group">
+                    <input type="text" id="style-note-input" placeholder="Add style note (e.g., 'Use em dashes naturally')">
+                    <button onclick="addStyleNote()" class="btn-secondary" style="margin-top: 8px;">+ Add Note</button>
+                </div>
+
+                <hr style="margin: 32px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+                <!-- Context Memories -->
+                <h3>Context & Background</h3>
+                <div id="context-memories-list"></div>
+                <div class="form-group">
+                    <input type="text" id="context-memory-input" placeholder="Add context (e.g., 'Building ZABAL platform')">
+                    <button onclick="addContextMemory()" class="btn-secondary" style="margin-top: 8px;">+ Add Context</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Loading Overlay -->
         <div id="loading-overlay" class="loading-overlay" style="display: none;">
             <div class="spinner"></div>
@@ -184,5 +241,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/memory.js') }}"></script>
 </body>
 </html>

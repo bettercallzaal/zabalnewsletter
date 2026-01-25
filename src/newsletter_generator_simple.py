@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from openai import OpenAI
+from src.memory_manager import MemoryManager
 
 class NewsletterGenerator:
     def __init__(self):
@@ -15,10 +16,14 @@ class NewsletterGenerator:
         self.provider = "groq"
         
         self.prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "newsletter_prompt.txt")
+        self.memory_manager = MemoryManager()
         
     def load_prompt(self):
+        """Load base prompt and enhance with personality memory"""
         with open(self.prompt_path, 'r') as f:
-            return f.read()
+            base_prompt = f.read()
+        # Enhance with personality/memory
+        return self.memory_manager.get_enhanced_prompt(base_prompt)
     
     def calculate_day_number(self):
         start_date = datetime(2025, 1, 1)

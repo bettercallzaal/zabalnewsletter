@@ -321,3 +321,64 @@ select:focus {
     outline: none;
     border-color: #667eea;
 }
+
+.memory-item {
+    background: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag {
+    background: #667eea;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.tag-remove:hover {
+    color: #ffcccc;
+}
+
+.btn-remove {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.btn-remove:hover {
+    background: #cc0000;
+}
+
+h3 {
+    color: #333;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+}

@@ -10,10 +10,12 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from src.newsletter_generator_simple import NewsletterGenerator
 from src.social_generator_simple import SocialGenerator
+from src.memory_manager import MemoryManager
 
 load_dotenv()
 
 app = Flask(__name__)
+memory_manager = MemoryManager()
 
 @app.route('/')
 def index():
@@ -233,6 +235,64 @@ def save_prompt():
             'message': 'Prompt saved successfully',
             'backup_created': True
         })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/memory/get')
+def get_memory():
+    """Get all personality memory"""
+    try:
+        memory = memory_manager.load_memory()
+        return jsonify({
+            'success': True,
+            'memory': memory
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/memory/add', methods=['POST'])
+def add_memory():
+    """Add memory item"""
+    try:
+        data = request.json
+        memory_type = data.get('type', '')
+        content = data.get('content', '')
+        
+        if memory_type == 'voice_example':
+            title = data.get('title', '')
+            memory_manager.add_voice_example(title, content)
+        elif memory_type == 'style_note':
+            memory_manager.add_style_note(content)
+        elif memory_type == 'voice_dont':
+            memory_manager.add_voice_dont(content)
+        elif memory_type == 'context':
+            memory_manager.add_context_memory(content)
+        else:
+            return jsonify({'error': 'Invalid memory type'}), 400
+        
+        return jsonify({
+            'success': True,
+            'message': 'Memory added successfully'
+        })
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/memory/update', methods=['POST'])
+def update_memory():
+    """Update entire memory"""
+    try:
+        data = request.json
+        memory_data = data.get('memory', {})
+        
+        if memory_manager.save_memory(memory_data):
+            return jsonify({
+                'success': True,
+                'message': 'Memory updated successfully'
+            })
+        else:
+            return jsonify({'error': 'Failed to save memory'}), 500
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
