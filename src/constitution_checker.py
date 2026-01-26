@@ -67,11 +67,15 @@ class ConstitutionChecker:
             if "– BetterCallZaal on behalf of the ZABAL Team" not in text:
                 issues.append("MISSING_SIGNATURE")
         
-        # Check closing line length
+        # Check closing line length (find last non-signature line)
         lines = text.strip().split("\n")
-        if len(lines) >= 2:
-            # Get line before signature
-            closing_line = lines[-2].strip()
+        closing_line = None
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].strip() and "BetterCallZaal" not in lines[i]:
+                closing_line = lines[i].strip()
+                break
+        
+        if closing_line:
             sentence_count = len([s for s in closing_line.split(".") if s.strip()])
             max_sentences = constraints.get("closing_line_max_sentences", 1)
             
@@ -110,7 +114,11 @@ class ConstitutionChecker:
         
         # Check for emojis or hashtags
         if constraints.get("no_emojis") or constraints.get("no_hashtags"):
-            if re.search(r"[#😀-🙏🌀-🗿]", text):
+            emoji_pattern = re.compile(
+                r"[\U0001F300-\U0001FAFF]|#",
+                flags=re.UNICODE
+            )
+            if emoji_pattern.search(text):
                 issues.append("EMOJI_OR_HASHTAG_FOUND")
         
         return issues
@@ -137,14 +145,16 @@ class ConstitutionChecker:
                 logger.log("AUTO-FIX", "Added missing signature", "basic")
             
             elif issue.startswith("CLOSING_TOO_LONG"):
-                # Auto-fix: trim to first sentence
+                # Auto-fix: trim to first sentence (find last non-signature line)
                 lines = fixed.strip().split("\n")
-                if len(lines) >= 2:
-                    closing = lines[-2]
-                    first_sentence = closing.split(".")[0] + "."
-                    lines[-2] = first_sentence
-                    fixed = "\n".join(lines)
-                    logger.log("AUTO-FIX", "Trimmed closing line to 1 sentence", "basic")
+                for i in range(len(lines) - 1, -1, -1):
+                    if lines[i].strip() and "BetterCallZaal" not in lines[i]:
+                        closing = lines[i]
+                        first_sentence = closing.split(".")[0] + "."
+                        lines[i] = first_sentence
+                        fixed = "\n".join(lines)
+                        logger.log("AUTO-FIX", "Trimmed closing line to 1 sentence", "basic")
+                        break
             
             elif issue == "MISSING_ZM_PREFIX":
                 # Auto-fix: add ZM prefix
