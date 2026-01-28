@@ -142,28 +142,76 @@ function generateSocialFromNewsletter() {
 
 // Copy to clipboard
 async function copyToClipboard(elementId) {
-    const content = document.getElementById(elementId).textContent;
+    const element = document.getElementById(elementId);
+    const content = element.textContent;
     
     try {
+        // Try modern clipboard API first
         await navigator.clipboard.writeText(content);
-        
-        // Show feedback
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        btn.style.background = '#28a745';
-        btn.style.borderColor = '#28a745';
-        btn.style.color = 'white';
-        
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-            btn.style.borderColor = '';
-            btn.style.color = '';
-        }, 2000);
+        showCopySuccess();
     } catch (error) {
-        alert('Failed to copy to clipboard');
+        // Fallback: select text for manual copy
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        try {
+            // Try execCommand as second fallback
+            const success = document.execCommand('copy');
+            selection.removeAllRanges();
+            
+            if (success) {
+                showCopySuccess();
+            } else {
+                // Text is selected, show instruction
+                showCopyInstruction();
+            }
+        } catch (err) {
+            // Text is already selected, just show instruction
+            showCopyInstruction();
+        }
     }
+}
+
+function showCopySuccess() {
+    const btn = event.target;
+    const originalText = btn.textContent;
+    const originalStyle = {
+        background: btn.style.background,
+        borderColor: btn.style.borderColor,
+        color: btn.style.color
+    };
+    
+    btn.textContent = '✓ Copied!';
+    btn.style.background = '#10b981';
+    btn.style.borderColor = '#10b981';
+    btn.style.color = 'white';
+    
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = originalStyle.background;
+        btn.style.borderColor = originalStyle.borderColor;
+        btn.style.color = originalStyle.color;
+    }, 2000);
+}
+
+function showCopyInstruction() {
+    const btn = event.target;
+    const originalText = btn.textContent;
+    
+    btn.textContent = 'Press Cmd+C / Ctrl+C';
+    btn.style.background = '#f59e0b';
+    btn.style.borderColor = '#f59e0b';
+    btn.style.color = 'white';
+    
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+    }, 3000);
 }
 
 // Load history
