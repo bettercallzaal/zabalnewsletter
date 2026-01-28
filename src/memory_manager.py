@@ -218,7 +218,7 @@ class MemoryManager:
         logger.log("PRUNE WARNING", "Could not prune enough - manual review needed", "basic", force=True)
         return prompt
     
-    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_context=None, parameters=None):
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_context=None, editing_instructions=None, parameters=None):
         """
         Get enhanced prompt with lens-specific guidance and voice parameters
         
@@ -227,6 +227,7 @@ class MemoryManager:
             daily_input: The day's reflection (for lens selection)
             lens_override: Manual lens selection (optional)
             roj_context: Full Roj observance text for Zoroastrian calendar (optional)
+            editing_instructions: Natural language editing instructions from user (optional)
             parameters: Generation parameters including voice controls (optional)
         
         Returns:
@@ -251,6 +252,13 @@ class MemoryManager:
             
             if logger.is_enabled("log_prompt_assembly"):
                 logger.log("ROJ CONTEXT", f"Added {len(roj_context)} chars", "basic")
+        
+        # Add editing instructions if provided
+        if editing_instructions:
+            enhanced += f"\n\n=== EDITING INSTRUCTIONS ===\nThe user has provided specific editing guidance:\n\n{editing_instructions}\n\nApply these instructions to the newsletter output. Follow them precisely while maintaining the overall voice and structure.\n\n"
+            
+            if logger.is_enabled("log_prompt_assembly"):
+                logger.log("EDITING INSTRUCTIONS", editing_instructions[:100], "basic")
         
         # Add voice parameter guidance if provided
         if parameters:

@@ -98,6 +98,7 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
     const badassQuote = document.getElementById('badass-quote').value;
     const lensOverride = document.getElementById('lens-override').value;
     const rojContext = document.getElementById('roj-context').value;
+    const editingInstructions = document.getElementById('editing-instructions').value;
     
     // Collect all parameter values
     const parameters = {
@@ -129,6 +130,7 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
                 badass_quote: badassQuote,
                 lens_override: lensOverride !== 'auto' ? lensOverride : null,
                 roj_context: rojContext || null,
+                editing_instructions: editingInstructions || null,
                 parameters: parameters
             })
         });

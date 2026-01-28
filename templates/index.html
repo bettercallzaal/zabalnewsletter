@@ -77,6 +77,19 @@
                         ></textarea>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="editing-instructions">✏️ Editing Instructions (Optional)</label>
+                        <textarea 
+                            id="editing-instructions" 
+                            name="editing_instructions" 
+                            rows="3" 
+                            placeholder="Tell the AI how to adjust the output... e.g., 'make it longer', 'add more detail about the live stream', 'remove the second paragraph', 'make it more casual', 'emphasize the Roj connection more'"
+                        ></textarea>
+                        <p class="info-text" style="margin-top: 8px; font-size: 0.85rem; color: #666;">
+                            Use natural language to guide edits. Works great for iteration: generate → review → add instructions → regenerate.
+                        </p>
+                    </div>
+                    
                     <!-- Advanced Parameters Section -->
                     <div class="form-group">
                         <button type="button" class="btn-secondary" onclick="toggleAdvancedParams()" style="width: 100%; margin-bottom: 10px;">

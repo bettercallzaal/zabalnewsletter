@@ -31,6 +31,7 @@ def generate_newsletter():
         badass_quote = data.get('badass_quote', '')
         lens_override = data.get('lens_override', None)
         roj_context = data.get('roj_context', '')
+        editing_instructions = data.get('editing_instructions', '')
         parameters = data.get('parameters', None)
         
         if not daily_input:
@@ -38,7 +39,7 @@ def generate_newsletter():
         
         # Generate newsletter (with optional lens override and parameters)
         gen = NewsletterGenerator()
-        result = gen.generate_newsletter(daily_input, badass_quote, lens_override, roj_context, parameters)
+        result = gen.generate_newsletter(daily_input, badass_quote, lens_override, roj_context, editing_instructions, parameters)
         
         return jsonify({
             'success': True,
