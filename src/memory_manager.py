@@ -218,7 +218,7 @@ class MemoryManager:
         logger.log("PRUNE WARNING", "Could not prune enough - manual review needed", "basic", force=True)
         return prompt
     
-    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_name=None, parameters=None):
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_context=None, parameters=None):
         """
         Get enhanced prompt with lens-specific guidance and voice parameters
         
@@ -226,7 +226,7 @@ class MemoryManager:
             base_prompt: Base newsletter prompt
             daily_input: The day's reflection (for lens selection)
             lens_override: Manual lens selection (optional)
-            roj_name: Specific Roj day name for Zoroastrian calendar (optional)
+            roj_context: Full Roj observance text for Zoroastrian calendar (optional)
             parameters: Generation parameters including voice controls (optional)
         
         Returns:
@@ -236,7 +236,7 @@ class MemoryManager:
         enhanced = self.get_enhanced_prompt(base_prompt)
         
         # Select and add lens guidance (with optional override and roj support)
-        lens_name, lens_data, reason, roj_guidance = self.lens_selector.select_lens(daily_input, override=lens_override, roj_name=roj_name)
+        lens_name, lens_data, reason, roj_guidance = self.lens_selector.select_lens(daily_input, override=lens_override, roj_name=None)
         
         if lens_data:
             lens_guidance = self.lens_selector.get_lens_guidance(lens_name, roj_guidance=roj_guidance)
@@ -244,6 +244,13 @@ class MemoryManager:
             
             if logger.is_enabled("log_prompt_assembly"):
                 logger.log("LENS ADDED", f"{lens_name} - {reason}", "basic")
+        
+        # Add Roj context if provided (for Zoroastrian observances)
+        if roj_context and lens_name == "zoroastrian_roj":
+            enhanced += f"\n\n=== ROJ OBSERVANCE FOR TODAY ===\n{roj_context}\n\nUse this Roj teaching as the foundation for the mindful moment. Reference it directly and connect it to what happened today.\n\n"
+            
+            if logger.is_enabled("log_prompt_assembly"):
+                logger.log("ROJ CONTEXT", f"Added {len(roj_context)} chars", "basic")
         
         # Add voice parameter guidance if provided
         if parameters:

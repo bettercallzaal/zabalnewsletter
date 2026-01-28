@@ -18,13 +18,13 @@ function showTab(tabName) {
     }
 }
 
-// Show/hide Roj name input based on lens selection
+// Show/hide Roj context input based on lens selection
 document.getElementById('lens-override').addEventListener('change', function(e) {
-    const rojNameGroup = document.getElementById('roj-name-group');
+    const rojContextGroup = document.getElementById('roj-context-group');
     if (e.target.value === 'zoroastrian_roj') {
-        rojNameGroup.style.display = 'block';
+        rojContextGroup.style.display = 'block';
     } else {
-        rojNameGroup.style.display = 'none';
+        rojContextGroup.style.display = 'none';
     }
 });
 
@@ -74,7 +74,7 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
     const dailyInput = document.getElementById('daily-input').value;
     const badassQuote = document.getElementById('badass-quote').value;
     const lensOverride = document.getElementById('lens-override').value;
-    const rojName = document.getElementById('roj-name').value;
+    const rojContext = document.getElementById('roj-context').value;
     
     // Collect all parameter values
     const parameters = {
@@ -105,7 +105,7 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
                 daily_input: dailyInput,
                 badass_quote: badassQuote,
                 lens_override: lensOverride !== 'auto' ? lensOverride : null,
-                roj_name: rojName || null,
+                roj_context: rojContext || null,
                 parameters: parameters
             })
         });

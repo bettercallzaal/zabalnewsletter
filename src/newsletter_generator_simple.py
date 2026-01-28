@@ -32,7 +32,7 @@ class NewsletterGenerator:
         delta = today - start_date
         return delta.days + 1
     
-    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None, roj_name=None, parameters=None):
+    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None, roj_context=None, parameters=None):
         day_num = self.calculate_day_number()
         today_str = datetime.now().strftime('%B %d, %Y')
         
@@ -54,7 +54,7 @@ class NewsletterGenerator:
             base_prompt = f.read()
         
         # Use lens-aware enhancement (with optional override)
-        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override, roj_name, parameters)
+        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override, roj_context, parameters)
         
         if logger.is_enabled("log_prompt_assembly"):
             logger.log("FINAL PROMPT LENGTH", f"{len(prompt_template)} chars", "verbose")
