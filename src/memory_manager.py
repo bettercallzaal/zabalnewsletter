@@ -233,11 +233,11 @@ class MemoryManager:
         # Get base enhancement
         enhanced = self.get_enhanced_prompt(base_prompt)
         
-        # Select and add lens guidance (with optional override)
-        lens_name, lens_data, reason = self.lens_selector.select_lens(daily_input, override=lens_override)
+        # Select and add lens guidance (with optional override and roj support)
+        lens_name, lens_data, reason, roj_guidance = self.lens_selector.select_lens(daily_input, override=lens_override)
         
         if lens_data:
-            lens_guidance = self.lens_selector.get_lens_guidance(lens_name)
+            lens_guidance = self.lens_selector.get_lens_guidance(lens_name, roj_guidance=roj_guidance)
             enhanced += f"\n\n=== MINDFUL LENS FOR TODAY ===\n{lens_guidance}\n\n"
             
             if logger.is_enabled("log_prompt_assembly"):

@@ -40,12 +40,8 @@ class NewsletterGenerator:
         with open(self.prompt_path, 'r') as f:
             base_prompt = f.read()
         
-        if logger.is_enabled("log_prompt_assembly"):
-            logger.log_section("PROMPT ASSEMBLY START")
-            logger.log("BASE PROMPT LOADED", f"{len(base_prompt)} chars", "verbose")
-        
         # Use lens-aware enhancement (with optional override)
-        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override)
+        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override, roj_name)
         
         if logger.is_enabled("log_prompt_assembly"):
             logger.log("FINAL PROMPT LENGTH", f"{len(prompt_template)} chars", "verbose")

@@ -70,5 +70,53 @@
       "Quoting books",
       "Generalizations"
     ]
+  },
+
+  "zoroastrian_roj": {
+    "tone": "rooted, ancestral, observant",
+    "use_when": ["heritage", "ritual", "gratitude", "cycles", "wisdom", "tradition"],
+    "guidance": [
+      "Connect daily action to ancient rhythm",
+      "Notice what the Roj reminds you to see",
+      "Honor without preaching",
+      "Let tradition inform, not dictate"
+    ],
+    "avoid": [
+      "Religious instruction",
+      "Explaining the faith",
+      "Missionary language"
+    ],
+    "roj_calendar": {
+      "hormuz": "Dedicated to Ahura Mazda. Grateful for wisdom, seeking knowledge from learned elders.",
+      "bahman": "Good Mind. Use intellect wisely, make good choices.",
+      "ardibehest": "Best righteousness. Truth, justice, divine law and order, virtue.",
+      "shehrevar": "Divine dominion, power, energy. Strong confidence to act righteously.",
+      "spendarmad": "Holy devotion. Care for body and mind, kindness and compassion toward others.",
+      "khordaad": "Perfection. Strive for excellence in everything.",
+      "amardaad": "Immortality. Living righteously so your way of life continues through others.",
+      "dae_pa_adar": "Day of the Creator before Adar. Grateful for all blessings of Ahura Mazda.",
+      "adar": "Fire. Light and warmth that knowledge brings, pushing away ignorance.",
+      "ava": "Water. Thankful for water, responsible by not wasting it.",
+      "khorshed": "Sun. Grateful for warmth, light, beautiful sunsets.",
+      "mohor": "Moon. Regularity of nature, cosmic order, bestower of luck and destiny.",
+      "tir": "Star Tishtraya, the rain-giving star. Grateful for rain after dry summer.",
+      "gosh": "Soul of Mother Earth, dedicated to animals. Some abstain from eating meat.",
+      "dae_pa_mehr": "Day of the Creator before Mehr. Grateful for all blessings.",
+      "mehr": "Light, promise, truth, justice, friendship. Keep your word, be fair, be a true friend.",
+      "sarosh": "Intuition, divine voice of conscience. Listen to what guides you toward right action.",
+      "rashne": "Truth and judge. Follow the path of truth, aim for fairness.",
+      "fravardin": "Remembrance of fravashis of the departed. Honor what they taught through how they lived.",
+      "behram": "Success and victory. May your actions manifest achievement.",
+      "raam": "Peace and joy. Grateful for blessings, breathe into calm.",
+      "govad": "Soft wind. Spend time outdoors, enjoy the breeze and nature.",
+      "dae_pa_din": "Day of the Creator before Din. Grateful for all blessings.",
+      "din": "Religion. Grateful to carry this ancient faith, apply its teachings daily.",
+      "ashishvangh": "Earthly and spiritual riches. Generate wealth honestly, use it charitably.",
+      "ashtad": "Truth and justice. Honesty and fairness in all interactions.",
+      "asman": "Sky. Spend time enjoying the creations in nature.",
+      "zamyad": "Earth. Duty to preserve resources, recycle, conserve water and energy.",
+      "mahraspand": "Holy words. Chant prayers with focus, find peace and courage.",
+      "aneran": "Endless light, where Ahura Mazda lives. Light associated with goodness and knowledge."
+    }
   }
 }
