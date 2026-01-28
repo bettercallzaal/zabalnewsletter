@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZABAL Content Generator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sliders.css') }}">
 </head>
 <body>
     <div class="container">
@@ -75,6 +76,70 @@
                             rows="3" 
                             placeholder="Enter a quote or reflection from You Are a Badass..."
                         ></textarea>
+                    </div>
+                    
+                    <!-- Advanced Parameters Section -->
+                    <div class="form-group">
+                        <button type="button" class="btn-secondary" onclick="toggleAdvancedParams()" style="width: 100%; margin-bottom: 10px;">
+                            ⚙️ Advanced Parameters (Optional)
+                        </button>
+                        <div id="advanced-params" style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; margin-top: 10px;">
+                            <h4 style="margin-top: 0; color: #333;">LLM Parameters</h4>
+                            
+                            <div class="slider-group">
+                                <label for="temperature">Temperature: <span id="temperature-value">0.7</span></label>
+                                <input type="range" id="temperature" name="temperature" min="0" max="1" step="0.1" value="0.7" oninput="updateSliderValue('temperature')">
+                                <p class="slider-desc">Controls creativity. Lower = consistent, Higher = creative</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="top_p">Top P: <span id="top_p-value">0.9</span></label>
+                                <input type="range" id="top_p" name="top_p" min="0" max="1" step="0.1" value="0.9" oninput="updateSliderValue('top_p')">
+                                <p class="slider-desc">Word choice diversity. Lower = focused, Higher = varied</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="frequency_penalty">Frequency Penalty: <span id="frequency_penalty-value">0.3</span></label>
+                                <input type="range" id="frequency_penalty" name="frequency_penalty" min="0" max="2" step="0.1" value="0.3" oninput="updateSliderValue('frequency_penalty')">
+                                <p class="slider-desc">Reduces word repetition. Higher = less repetition</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="presence_penalty">Presence Penalty: <span id="presence_penalty-value">0.3</span></label>
+                                <input type="range" id="presence_penalty" name="presence_penalty" min="0" max="2" step="0.1" value="0.3" oninput="updateSliderValue('presence_penalty')">
+                                <p class="slider-desc">Encourages topic variety. Higher = more diverse topics</p>
+                            </div>
+                            
+                            <h4 style="margin-top: 20px; color: #333;">Voice & Style Parameters</h4>
+                            
+                            <div class="slider-group">
+                                <label for="formality">Formality: <span id="formality-value">4</span></label>
+                                <input type="range" id="formality" name="formality" min="1" max="10" step="1" value="4" oninput="updateSliderValue('formality')">
+                                <p class="slider-desc">1 = Very casual, 10 = Very formal</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="energy_level">Energy Level: <span id="energy_level-value">5</span></label>
+                                <input type="range" id="energy_level" name="energy_level" min="1" max="10" step="1" value="5" oninput="updateSliderValue('energy_level')">
+                                <p class="slider-desc">1 = Subdued/quiet, 10 = Energetic/dynamic</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="reflection_depth">Reflection Depth: <span id="reflection_depth-value">6</span></label>
+                                <input type="range" id="reflection_depth" name="reflection_depth" min="1" max="10" step="1" value="6" oninput="updateSliderValue('reflection_depth')">
+                                <p class="slider-desc">1 = Surface observations, 10 = Deep philosophical</p>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label for="personal_universal">Personal ↔ Universal: <span id="personal_universal-value">6</span></label>
+                                <input type="range" id="personal_universal" name="personal_universal" min="1" max="10" step="1" value="6" oninput="updateSliderValue('personal_universal')">
+                                <p class="slider-desc">1 = Very personal/intimate, 10 = Broadly relatable</p>
+                            </div>
+                            
+                            <button type="button" class="btn-secondary" onclick="resetParameters()" style="width: 100%; margin-top: 10px;">
+                                Reset to Defaults
+                            </button>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn-primary">Generate Newsletter</button>

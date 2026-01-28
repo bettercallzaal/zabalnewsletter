@@ -32,16 +32,29 @@ class NewsletterGenerator:
         delta = today - start_date
         return delta.days + 1
     
-    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None, roj_name=None):
+    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None, roj_name=None, parameters=None):
         day_num = self.calculate_day_number()
         today_str = datetime.now().strftime('%B %d, %Y')
+        
+        # Set default parameters if not provided
+        if parameters is None:
+            parameters = {
+                'temperature': 0.7,
+                'top_p': 0.9,
+                'frequency_penalty': 0.3,
+                'presence_penalty': 0.3,
+                'formality': 4,
+                'energy_level': 5,
+                'reflection_depth': 6,
+                'personal_universal': 6
+            }
         
         # Load prompt with lens selection based on daily input
         with open(self.prompt_path, 'r') as f:
             base_prompt = f.read()
         
         # Use lens-aware enhancement (with optional override)
-        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override, roj_name)
+        prompt_template = self.memory_manager.get_enhanced_prompt_with_lens(base_prompt, daily_input, lens_override, roj_name, parameters)
         
         if logger.is_enabled("log_prompt_assembly"):
             logger.log("FINAL PROMPT LENGTH", f"{len(prompt_template)} chars", "verbose")
@@ -67,7 +80,10 @@ Daily Input:
                     {"role": "system", "content": prompt_template},
                     {"role": "user", "content": user_message}
                 ],
-                temperature=0.7,
+                temperature=parameters.get('temperature', 0.7),
+                top_p=parameters.get('top_p', 0.9),
+                frequency_penalty=parameters.get('frequency_penalty', 0.3),
+                presence_penalty=parameters.get('presence_penalty', 0.3),
                 max_tokens=2000
             )
             

@@ -218,18 +218,19 @@ class MemoryManager:
         logger.log("PRUNE WARNING", "Could not prune enough - manual review needed", "basic", force=True)
         return prompt
     
-    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_name=None):
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_name=None, parameters=None):
         """
-        Get enhanced prompt with lens-specific guidance
+        Get enhanced prompt with lens-specific guidance and voice parameters
         
         Args:
             base_prompt: Base newsletter prompt
             daily_input: The day's reflection (for lens selection)
             lens_override: Manual lens selection (optional)
             roj_name: Specific Roj day name for Zoroastrian calendar (optional)
+            parameters: Generation parameters including voice controls (optional)
         
         Returns:
-            Enhanced prompt with lens guidance
+            Enhanced prompt with lens guidance and parameter instructions
         """
         # Get base enhancement
         enhanced = self.get_enhanced_prompt(base_prompt)
@@ -244,4 +245,55 @@ class MemoryManager:
             if logger.is_enabled("log_prompt_assembly"):
                 logger.log("LENS ADDED", f"{lens_name} - {reason}", "basic")
         
+        # Add voice parameter guidance if provided
+        if parameters:
+            voice_params = self._build_voice_guidance(parameters)
+            if voice_params:
+                enhanced += f"\n\n=== VOICE PARAMETERS ===\n{voice_params}\n\n"
+                
+                if logger.is_enabled("log_prompt_assembly"):
+                    logger.log("VOICE PARAMS", f"Formality: {parameters.get('formality')}, Energy: {parameters.get('energy_level')}", "basic")
+        
         return enhanced
+    
+    def _build_voice_guidance(self, parameters):
+        """Build voice parameter guidance text"""
+        guidance_parts = []
+        
+        # Formality
+        formality = parameters.get('formality', 5)
+        if formality <= 3:
+            guidance_parts.append("FORMALITY: Very casual, conversational tone. Use contractions, informal language.")
+        elif formality >= 7:
+            guidance_parts.append("FORMALITY: More formal, polished tone. Avoid slang, use complete sentences.")
+        else:
+            guidance_parts.append("FORMALITY: Balanced tone - natural but not overly casual.")
+        
+        # Energy Level
+        energy = parameters.get('energy_level', 5)
+        if energy <= 3:
+            guidance_parts.append("ENERGY: Subdued, quiet, contemplative. Gentle pacing, soft observations.")
+        elif energy >= 7:
+            guidance_parts.append("ENERGY: Energetic, dynamic. More momentum, active language.")
+        else:
+            guidance_parts.append("ENERGY: Steady, grounded. Neither rushed nor slow.")
+        
+        # Reflection Depth
+        depth = parameters.get('reflection_depth', 5)
+        if depth <= 3:
+            guidance_parts.append("DEPTH: Surface-level observations. What happened, what was noticed.")
+        elif depth >= 7:
+            guidance_parts.append("DEPTH: Deeper philosophical reflection. Patterns, meaning, broader implications.")
+        else:
+            guidance_parts.append("DEPTH: Moderate reflection. Some insight without over-analyzing.")
+        
+        # Personal vs Universal
+        scope = parameters.get('personal_universal', 5)
+        if scope <= 3:
+            guidance_parts.append("SCOPE: Very personal, intimate. Specific to this day, this experience.")
+        elif scope >= 7:
+            guidance_parts.append("SCOPE: Broadly relatable. Universal themes that others can connect to.")
+        else:
+            guidance_parts.append("SCOPE: Balanced - personal but accessible.")
+        
+        return "\n".join(guidance_parts)

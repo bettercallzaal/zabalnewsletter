@@ -1,0 +1,82 @@
+{
+  "llm_parameters": {
+    "temperature": {
+      "default": 0.7,
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.1,
+      "description": "Controls creativity. Lower = consistent, Higher = creative"
+    },
+    "top_p": {
+      "default": 0.9,
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.1,
+      "description": "Word choice diversity. Lower = focused, Higher = varied"
+    },
+    "frequency_penalty": {
+      "default": 0.3,
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.1,
+      "description": "Reduces word repetition. Higher = less repetition"
+    },
+    "presence_penalty": {
+      "default": 0.3,
+      "min": 0.0,
+      "max": 2.0,
+      "step": 0.1,
+      "description": "Encourages topic variety. Higher = more diverse topics"
+    }
+  },
+  "voice_parameters": {
+    "formality": {
+      "default": 4,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "description": "1 = Very casual, 10 = Very formal",
+      "labels": {
+        "1": "Very Casual",
+        "5": "Balanced",
+        "10": "Formal"
+      }
+    },
+    "energy_level": {
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "description": "1 = Subdued/quiet, 10 = Energetic/dynamic",
+      "labels": {
+        "1": "Quiet",
+        "5": "Steady",
+        "10": "Energetic"
+      }
+    },
+    "reflection_depth": {
+      "default": 6,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "description": "1 = Surface observations, 10 = Deep philosophical",
+      "labels": {
+        "1": "Surface",
+        "5": "Moderate",
+        "10": "Philosophical"
+      }
+    },
+    "personal_universal": {
+      "default": 6,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "description": "1 = Very personal/intimate, 10 = Broadly relatable",
+      "labels": {
+        "1": "Intimate",
+        "5": "Balanced",
+        "10": "Universal"
+      }
+    }
+  }
+}

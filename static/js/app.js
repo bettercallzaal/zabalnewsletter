@@ -28,6 +28,45 @@ document.getElementById('lens-override').addEventListener('change', function(e) 
     }
 });
 
+// Toggle advanced parameters section
+function toggleAdvancedParams() {
+    const paramsDiv = document.getElementById('advanced-params');
+    if (paramsDiv.style.display === 'none') {
+        paramsDiv.style.display = 'block';
+    } else {
+        paramsDiv.style.display = 'none';
+    }
+}
+
+// Update slider value display
+function updateSliderValue(sliderId) {
+    const slider = document.getElementById(sliderId);
+    const valueSpan = document.getElementById(sliderId + '-value');
+    valueSpan.textContent = slider.value;
+}
+
+// Reset all parameters to defaults
+function resetParameters() {
+    const defaults = {
+        'temperature': 0.7,
+        'top_p': 0.9,
+        'frequency_penalty': 0.3,
+        'presence_penalty': 0.3,
+        'formality': 4,
+        'energy_level': 5,
+        'reflection_depth': 6,
+        'personal_universal': 6
+    };
+    
+    for (const [id, value] of Object.entries(defaults)) {
+        const slider = document.getElementById(id);
+        if (slider) {
+            slider.value = value;
+            updateSliderValue(id);
+        }
+    }
+}
+
 // Newsletter form submission
 document.getElementById('newsletter-form').addEventListener('submit', async function generateNewsletter(e) {
     e.preventDefault();
@@ -36,6 +75,18 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
     const badassQuote = document.getElementById('badass-quote').value;
     const lensOverride = document.getElementById('lens-override').value;
     const rojName = document.getElementById('roj-name').value;
+    
+    // Collect all parameter values
+    const parameters = {
+        temperature: parseFloat(document.getElementById('temperature').value),
+        top_p: parseFloat(document.getElementById('top_p').value),
+        frequency_penalty: parseFloat(document.getElementById('frequency_penalty').value),
+        presence_penalty: parseFloat(document.getElementById('presence_penalty').value),
+        formality: parseInt(document.getElementById('formality').value),
+        energy_level: parseInt(document.getElementById('energy_level').value),
+        reflection_depth: parseInt(document.getElementById('reflection_depth').value),
+        personal_universal: parseInt(document.getElementById('personal_universal').value)
+    };
     
     if (!dailyInput) {
         showError('Please enter your daily input');
@@ -54,7 +105,8 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
                 daily_input: dailyInput,
                 badass_quote: badassQuote,
                 lens_override: lensOverride !== 'auto' ? lensOverride : null,
-                roj_name: rojName || null
+                roj_name: rojName || null,
+                parameters: parameters
             })
         });
         
