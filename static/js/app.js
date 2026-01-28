@@ -38,6 +38,29 @@ function toggleAdvancedParams() {
     }
 }
 
+// Regenerate newsletter with current form values
+function regenerateNewsletter() {
+    // Scroll to form
+    document.getElementById('newsletter-tab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Highlight the generate button briefly
+    const btn = document.querySelector('#newsletter-form button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.textContent = '🔄 Click to Regenerate';
+    btn.style.background = '#f59e0b';
+    
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+    }, 2000);
+}
+
+// Scroll to form for editing
+function scrollToForm() {
+    document.getElementById('newsletter-tab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('daily-input').focus();
+}
+
 // Update slider value display
 function updateSliderValue(sliderId) {
     const slider = document.getElementById(sliderId);
@@ -115,12 +138,19 @@ document.getElementById('newsletter-form').addEventListener('submit', async func
         if (data.success) {
             // Show output
             document.getElementById('newsletter-output').style.display = 'block';
-            document.getElementById('newsletter-content').textContent = data.newsletter;
+            
+            // Display as plain text with preserved formatting
+            const contentDiv = document.getElementById('newsletter-content');
+            contentDiv.textContent = data.newsletter;
+            
             document.getElementById('day-info').textContent = `Day ${data.day_num} - ${data.date}`;
             document.getElementById('newsletter-saved').textContent = `✓ Saved to: ${data.filepath}`;
             
             // Store for social generation
             window.currentNewsletter = data.newsletter;
+            
+            // Scroll to output
+            document.getElementById('newsletter-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // Scroll to output
             document.getElementById('newsletter-output').scrollIntoView({ behavior: 'smooth' });

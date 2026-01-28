@@ -149,13 +149,21 @@
                 <div class="output-header">
                     <h3>Generated Newsletter</h3>
                     <div class="output-actions">
-                        <button onclick="copyToClipboard('newsletter-content')" class="btn-secondary">Copy</button>
+                        <button onclick="copyToClipboard('newsletter-content')" class="btn-secondary">📋 Copy</button>
+                        <button onclick="regenerateNewsletter()" class="btn-secondary">🔄 Regenerate</button>
                         <button onclick="generateSocialFromNewsletter()" class="btn-secondary">Generate Social →</button>
                     </div>
                 </div>
                 <div class="day-info" id="day-info"></div>
-                <pre id="newsletter-content" class="content-box"></pre>
+                <div id="newsletter-content" class="content-box-plain"></div>
                 <p class="file-saved" id="newsletter-saved"></p>
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <p style="margin: 0 0 10px 0; font-weight: 600; color: #333;">Want to iterate?</p>
+                    <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: #666;">
+                        Tweak your input, adjust parameters, or change the lens above, then click Regenerate.
+                    </p>
+                    <button onclick="scrollToForm()" class="btn-secondary" style="width: 100%;">↑ Back to Form</button>
+                </div>
             </div>
         </div>
 
