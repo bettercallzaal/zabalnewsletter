@@ -218,14 +218,15 @@ class MemoryManager:
         logger.log("PRUNE WARNING", "Could not prune enough - manual review needed", "basic", force=True)
         return prompt
     
-    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None):
+    def get_enhanced_prompt_with_lens(self, base_prompt, daily_input, lens_override=None, roj_name=None):
         """
-        Enhance prompt with personality memory AND selected mindful lens
+        Get enhanced prompt with lens-specific guidance
         
         Args:
             base_prompt: Base newsletter prompt
             daily_input: The day's reflection (for lens selection)
             lens_override: Manual lens selection (optional)
+            roj_name: Specific Roj day name for Zoroastrian calendar (optional)
         
         Returns:
             Enhanced prompt with lens guidance
@@ -234,7 +235,7 @@ class MemoryManager:
         enhanced = self.get_enhanced_prompt(base_prompt)
         
         # Select and add lens guidance (with optional override and roj support)
-        lens_name, lens_data, reason, roj_guidance = self.lens_selector.select_lens(daily_input, override=lens_override)
+        lens_name, lens_data, reason, roj_guidance = self.lens_selector.select_lens(daily_input, override=lens_override, roj_name=roj_name)
         
         if lens_data:
             lens_guidance = self.lens_selector.get_lens_guidance(lens_name, roj_guidance=roj_guidance)

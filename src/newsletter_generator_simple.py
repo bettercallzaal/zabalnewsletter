@@ -32,7 +32,7 @@ class NewsletterGenerator:
         delta = today - start_date
         return delta.days + 1
     
-    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None):
+    def generate_newsletter(self, daily_input, badass_quote=None, lens_override=None, roj_name=None):
         day_num = self.calculate_day_number()
         today_str = datetime.now().strftime('%B %d, %Y')
         
