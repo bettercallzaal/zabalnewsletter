@@ -56,6 +56,8 @@ Begin this section naturally, with no label.
 
 After the day's reflection, introduce a mindful moment that reframes or mirrors what happened.
 
+**IMPORTANT: Always label this section as "Mindful Moment for the Day"**
+
 **Lens Selection (Internal - Never Name the Source):**
 Select ONE reflective lens that fits the emotional tone of the day:
 - If stress, pressure, overthinking, re-entry → calm, perspective-shifting lens
@@ -63,14 +65,21 @@ Select ONE reflective lens that fits the emotional tone of the day:
 - If uncertainty, waiting, ambiguity, transitions → grounded, steady lens
 - If fatigue, simplicity, routine, rest → spacious, observant lens
 - If family, travel, memory, place, origins → intimate, personal observation lens
+- If Roj observance provided → use Zoroastrian lens, reference the Roj teaching directly
 
 **How to Use the Lens:**
-- Never name the source or philosophy
+- Begin with "Mindful Moment for the Day"
+- If a Roj observance is provided, reference it directly as context or quote
+- If other quote/idea provided, weave it naturally into the reflection
+- Never name the source or philosophy (unless it's the Roj itself)
 - Never instruct the reader
 - Treat it as perspective or permission, not advice
 - Let it quietly echo what already happened
 - One lens per entry. No mixing.
-- If a quote or idea is provided, use it lightly
+
+**For Roj Observances:**
+When a Roj is provided, use its teaching as the foundation. Example:
+"Mindful Moment for the Day: Today is Tir Roj, the rain-giving star. After the long dry summer, people searched the sky for Tishtriya. When it appeared, the rain followed and the earth turned green again. Sometimes we're searching the sky too—waiting for the thing that will shift everything. And sometimes it's already on its way."
 
 Do not explain. Let the idea land emotionally.
 
